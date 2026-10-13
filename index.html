@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tourist Places Explorer</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #333;
+        }
+
+        /* Navigation */
+
+        nav {
+            background: #087f8c;
+            color: white;
+
+            padding: 18px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+        }
+
+        nav h1 {
+            font-size: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: bold;
+        }
+
+        /* Hero */
+
+        .hero {
+            height: 500px;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,0.45),
+                    rgba(0,0,0,0.45)
+                ),
+                url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da")
+                center/cover;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+
+            color: white;
+        }
+
+        .hero h2 {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 21px;
+            margin-bottom: 30px;
+        }
+
+        /* Search */
+
+        .search {
+            display: flex;
+            justify-content: center;
+        }
+
+        .search input {
+            width: 350px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 8px 0 0 8px;
+
+            font-size: 16px;
+        }
+
+        .search button {
+            padding: 15px 25px;
+
+            border: none;
+
+            background: #ff9800;
+
+            color: white;
+
+            border-radius: 0 8px 8px 0;
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+        /* Places */
+
+        .places {
+            padding: 60px 7%;
+        }
+
+        .places h2 {
+            text-align: center;
+
+            font-size: 35px;
+
+            margin-bottom: 40px;
+        }
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
+
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.15);
+
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 220px;
+
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content h3 {
+            color: #087f8c;
+
+            font-size: 23px;
+
+            margin-bottom: 10px;
+        }
+
+        .card-content p {
+            line-height: 1.6;
+
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+
+            padding: 10px 18px;
+
+            background: #087f8c;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #055e67;
+        }
+
+        /* About */
+
+        .about {
+            background: white;
+
+            padding: 60px 10%;
+
+            text-align: center;
+        }
+
+        .about h2 {
+            font-size: 32px;
+
+            margin-bottom: 20px;
+        }
+
+        .about p {
+            max-width: 850px;
+
+            margin: auto;
+
+            line-height: 1.8;
+
+            font-size: 17px;
+        }
+
+        /* Footer */
+
+        footer {
+            background: #222;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 25px;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            nav {
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .hero h2 {
+                font-size: 35px;
+            }
+
+            .search input {
+                width: 220px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <nav>
+
+        <h1>🌍 Tourist Explorer</h1>
+
+        <div>
+
+            <a href="#home">Home</a>
+
+            <a href="#places">Places</a>
+
+            <a href="#about">About</a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Hero Section -->
+
+    <section class="hero" id="home">
+
+        <div>
+
+            <h2>
+                Explore Incredible India
+            </h2>
+
+            <p>
+                Discover beautiful tourist destinations
+                and plan your next journey.
+            </p>
+
+
+            <div class="search">
+
+                <input
+                    type="text"
+                    id="searchBox"
+                    placeholder="Search place..."
+                    onkeyup="searchPlaces()"
+                >
+
+                <button>
+                    Search
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Tourist Places -->
+
+    <section class="places" id="places">
+
+        <h2>
+            🏖️ Popular Tourist Places
+        </h2>
+
+
+        <div class="cards" id="placeCards">
+
+
+            <!-- Taj Mahal -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1564507592333-c60657eea523"
+                    alt="Taj Mahal"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Taj Mahal
+                    </h3>
+
+                    <p>
+                        📍 Agra, Uttar Pradesh
+                    </p>
+
+                    <p>
+                        One of India's most famous
+                        historical monuments.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Taj+Mahal+Agra"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Gateway of India -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f"
+                    alt="Gateway of India"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Gateway of India
+                    </h3>
+
+                    <p>
+                        📍 Mumbai, Maharashtra
+                    </p>
+
+                    <p>
+                        A famous landmark overlooking
+                        the Arabian Sea.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Gateway+of+India+Mumbai"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Goa -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2"
+                    alt="Goa Beach"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Goa
+                    </h3>
+
+                    <p>
+                        📍 Goa, India
+                    </p>
+
+                    <p>
+                        Famous for beautiful beaches,
+                        culture and exciting activities.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Goa+India"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Munnar -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944"
+                    alt="Munnar"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Munnar
+                    </h3>
+
+                    <p>
+                        📍 Kerala, India
+                    </p>
+
+                    <p>
+                        A beautiful hill station famous
+                        for tea gardens and mountains.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Munnar+Kerala"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Manali -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23"
+                    alt="Manali"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Manali
+                    </h3>
+
+                    <p>
+                        📍 Himachal Pradesh
+                    </p>
+
+                    <p>
+                        A popular mountain destination
+                        surrounded by beautiful scenery.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Manali+Himachal+Pradesh"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Jaipur -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1599661046289-e31897846e41"
+                    alt="Hawa Mahal Jaipur"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Hawa Mahal
+                    </h3>
+
+                    <p>
+                        📍 Jaipur, Rajasthan
+                    </p>
+
+                    <p>
+                        An iconic palace famous for
+                        its beautiful architecture.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Hawa+Mahal+Jaipur"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Ladakh -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1548013146-72479768bada"
+                    alt="Ladakh"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Ladakh
+                    </h3>
+
+                    <p>
+                        📍 Ladakh, India
+                    </p>
+
+                    <p>
+                        Known for mountains, monasteries,
+                        lakes and adventure tourism.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Ladakh+India"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Kerala -->
+
+            <div class="card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1600669094606-4e3e9f2f9a99"
+                    alt="Kerala Backwaters"
+                >
+
+                <div class="card-content">
+
+                    <h3>
+                        Kerala Backwaters
+                    </h3>
+
+                    <p>
+                        📍 Kerala, India
+                    </p>
+
+                    <p>
+                        Famous for peaceful backwaters,
+                        houseboats and natural beauty.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="https://www.google.com/maps/search/?api=1&query=Kerala+Backwaters"
+                        target="_blank"
+                    >
+                        📍 View Location
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- About -->
+
+    <section class="about" id="about">
+
+        <h2>
+            About Tourist Explorer
+        </h2>
+
+        <p>
+            Tourist Places Explorer is a web-based project
+            designed to help users discover popular tourist
+            destinations in India. Users can search for places,
+            view attractive images, read short descriptions
+            and open the location directly on Google Maps.
+        </p>
+
+    </section>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            © 2026 Tourist Places Explorer
+        </p>
+
+        <p>
+            HTML | CSS | JavaScript
+        </p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+
+    <script>
+
+        function searchPlaces() {
+
+            let input =
+                document
+                .getElementById("searchBox")
+                .value
+                .toLowerCase();
+
+            let cards =
+                document
+                .getElementById("placeCards")
+                .getElementsByClassName("card");
+
+
+            for (let i = 0; i < cards.length; i++) {
+
+                let title =
+                    cards[i]
+                    .getElementsByTagName("h3")[0]
+                    .innerText
+                    .toLowerCase();
+
+
+                let location =
+                    cards[i]
+                    .getElementsByTagName("p")[0]
+                    .innerText
+                    .toLowerCase();
+
+
+                if (
+                    title.includes(input) ||
+                    location.includes(input)
+                ) {
+
+                    cards[i].style.display =
+                        "block";
+
+                }
+
+                else {
+
+                    cards[i].style.display =
+                        "none";
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
